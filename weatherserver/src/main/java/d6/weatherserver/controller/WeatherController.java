@@ -1,5 +1,7 @@
 package d6.weatherserver.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +23,11 @@ public class WeatherController {
     WeatherService weaSvc;
 
     @GetMapping("/{city}")
-	public String getCustomer(@PathVariable String city) {
+	public ResponseEntity<String> getCustomer(@PathVariable String city) throws IOException {
+        JsonObject result = weaSvc.getWeatherDetails(city);
+        System.out.println("json object is > " +result);
 
-        System.out.println("city is > " +city);
-
-        weaSvc.getWeatherDetails(city);
-
-        System.out.println("humidity is > " 
-            +weaSvc.getWeatherDetails(city).getJsonNumber("humidity").intValue());
-        System.out.println("json object is > " 
-            +weaSvc.getWeatherDetails(city));
-
-        return weaSvc.getWeatherDetails(city).toString();
+		return ResponseEntity.ok(result.toString());
     }
 
 }
